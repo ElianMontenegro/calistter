@@ -1,0 +1,26 @@
+{
+  "name": "lucio-elian",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+      "dev": "nodemon app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ElianMontenegro/crud-optimized-db.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ElianMontenegro/crud-optimized-db/issues"
+  },
+  "homepage": "https://github.com/ElianMontenegro/crud-optimized-db#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.6.9",
+    "mongoose": "^5.13.0"
+  }
+}
