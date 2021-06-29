@@ -2,9 +2,9 @@
   "name": "lucio-elian",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-      "dev": "nodemon app"
+    "dev": "nodemon --exec babel-node app"
   },
   "repository": {
     "type": "git",
@@ -18,9 +18,15 @@
   },
   "homepage": "https://github.com/ElianMontenegro/crud-optimized-db#readme",
   "dependencies": {
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
+    
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mongodb": "^3.6.9",
-    "mongoose": "^5.13.0"
+    "mongoose": "^5.13.0",
+    "nodemon": "^2.0.8",
+    "rimraf": "^3.0.2"
   }
 }
