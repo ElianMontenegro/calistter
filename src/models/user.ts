@@ -1,7 +1,15 @@
-import mongoose from 'mongoose';
-const Schema = mongoose.Schema;
+import mongoose,  { Schema, model } from 'mongoose';
 
-const userSchema = new Schema({
+interface User {
+    username: string;
+    email: string;
+    role: string;
+    password: string;
+    date: Date;
+    phone:mongoose.Types.ObjectId;
+}
+
+const userSchema = new Schema<User>({
     username: {
         type: String,
         required: true,
@@ -31,4 +39,7 @@ const userSchema = new Schema({
     phone:[{ type: mongoose.Types.ObjectId, ref: 'phone' }]
 });
 
-export default user = mongoose.model('user', userSchema);
+
+
+
+export default  model<User>('user', userSchema);
