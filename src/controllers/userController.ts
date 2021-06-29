@@ -6,14 +6,12 @@ class UserController {
 
     public async register(req: Request, res: Response) {
         const { username, email, role, password, date , phone } = req.body;
-        console.log(username, email, role, password, date, phone);
-
-    }
+        const user = new userDB({username, email, password})
+        const resp = await user.save();
+    } 
 
     public async login(req: Request, res: Response) {
         const { email, password } = req.body;
-        console.log( email, password);
-
     }
 
     

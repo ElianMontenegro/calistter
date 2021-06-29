@@ -39,7 +39,4 @@ const userSchema = new Schema<User>({
     phone:[{ type: mongoose.Types.ObjectId, ref: 'phone' }]
 });
 
-
-
-
 export default  model<User>('user', userSchema);
