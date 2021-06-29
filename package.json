@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/ElianMontenegro/crud-optimized-db#readme",
   "dependencies": {
+    "@types/bcrypt-nodejs": "0.0.31",
+    "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mongodb": "^3.6.9",
@@ -29,6 +31,7 @@
     "rimraf": "^3.0.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.12",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.4"

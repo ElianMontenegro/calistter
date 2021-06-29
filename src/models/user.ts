@@ -1,4 +1,7 @@
-import mongoose,  { Schema, model } from 'mongoose';
+import mongoose,  { Schema, model, Error, Mongoose, Number } from 'mongoose';
+import bcrypt, {genSalt} from "bcrypt";
+
+const salt: number = 10;
 
 interface User {
     username: string;
@@ -6,7 +9,7 @@ interface User {
     role: string;
     password: string;
     date: Date;
-    phone:mongoose.Types.ObjectId;
+    phone: number;
 }
 
 const userSchema = new Schema<User>({
@@ -36,7 +39,24 @@ const userSchema = new Schema<User>({
         type: Date,
         default: Date.now
     },
-    phone:[{ type: mongoose.Types.ObjectId, ref: 'phone' }]
+    phone: {
+        type: Number,
+        minlength: 10
+    }
 });
+
+userSchema.pre('save', function (next) {
+    bcrypt.genSalt(salt, async (err, salt) => {
+        try {
+            const hash = await bcrypt.hash(this.password, salt);
+            this.password = hash;
+            next();
+        } catch (error) {
+            console.log(error);
+        }
+    });
+});
+ 
+
 
 export default  model<User>('user', userSchema);
