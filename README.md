@@ -33,12 +33,3 @@
 	],
 	"exec": "ts-node ./src/index.ts"
 }
-
-
-
-
-
-**Config Nodemon**
-
-
-
