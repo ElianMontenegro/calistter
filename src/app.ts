@@ -1,17 +1,22 @@
 import express from 'express';
-import '../config';
+import './config';
 import './config/connectDB';
-const app = express();
-const port = process.env.PORT || 3000;
-const UserRouter = require('./routes/user');
+import passport from 'passport'
+import passportMiddlewars from './middlewares/passport';
+import passportGoogleMiddlewars from './middlewares/passportGoogle';
+import UserRouter from './routes/user';
 
+const app = express();
+app.set('port', process.env.PORT || 3000);
 
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-
+app.use(passport.initialize());
+passport.use(passportMiddlewars);
+passport.use(passportGoogleMiddlewars);
 app.use('/', UserRouter);
 
-app.listen(port, ()=>{
-    console.log(`server ready on port:${process.env.PORT}` );
-});
+
+export default app
+

@@ -2,9 +2,9 @@
   "name": "lucio-elian",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "ts:node": "ts-node src/app.ts",
+    "ts:node": "ts-node src/index.ts",
     "clean": "del build",
     "build": "tsc",
     "dev": "nodemon"
@@ -21,15 +21,28 @@
   },
   "homepage": "https://github.com/ElianMontenegro/crud-optimized-db#readme",
   "dependencies": {
+    "@types/bcrypt-nodejs": "0.0.31",
+    "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.9",
     "mongoose": "^5.13.0",
     "nodemon": "^2.0.8",
+    "passport": "^0.4.1",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-jwt": "^4.0.0",
     "rimraf": "^3.0.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/cors": "^2.8.10",
     "@types/express": "^4.17.12",
+    "@types/jsonwebtoken": "^8.5.2",
+    "@types/mongoose": "^5.11.97",
+    "@types/passport": "^1.0.6",
+    "@types/passport-google-oauth20": "^2.0.8",
+    "@types/passport-jwt": "^3.0.5",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.4"
   }
