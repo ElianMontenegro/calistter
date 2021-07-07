@@ -18,7 +18,6 @@ class UserController {
         if (!(username || email || password || phone)) {
             return res.status(400).json({msg: 'fields empty'})
         }
-        
         const user = await UserModel.findOne({email: email})
         if (user) {
             return res.status(400).json({msg: 'this email already exist'});
@@ -27,11 +26,13 @@ class UserController {
         const newUser = new UserModel({username, email, password, phone})
         try {
             const resp = await newUser.save();
-            res.json({
+            res.status(201).json({
                 data: resp
             })
         } catch (error) {
-            console.log(error);
+            return res.status(400).json({
+                message: `error ${error}` 
+            })
         }
     } 
 

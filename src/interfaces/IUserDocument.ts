@@ -7,4 +7,5 @@ export interface IUserDocument extends Document {
     password: string;
     date: Date;
     phone: number;
+    posts: (any)[];
 }

@@ -4,11 +4,12 @@ const router: Router = Router();
 
 import passport from 'passport'
 
-// router.get("/register", userController.register)
-router.post("/register", userController.register)
 
-// router.get("/login", userController.login)
-router.post("/login", userController.login)
+router.route("/register")
+    .post(userController.register)
+    
+router.route("/login")
+    .post(userController.login)
 
 router.get("/home", passport.authenticate('jwt', {session: false}), (req, res) => {
     res.send('success')

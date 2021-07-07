@@ -1,7 +1,7 @@
-import mongoose, { Schema, Model, model, ObjectId, Document } from "mongoose";
-import bcrypt, { genSalt } from "bcrypt";
+import mongoose, { Schema, model } from "mongoose";
+import bcrypt from "bcrypt";
 import { IUserDocument } from "../interfaces/IUserDocument";
-const salt: number = 10;
+
 
 export interface IUserModel extends IUserDocument {
   isModified(password: string): boolean;
@@ -33,15 +33,19 @@ let schema = new Schema<IUserModel>({
     required: true,
     minlength: 6,
   },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
   phone: {
     type: Number,
     minlength: 10,
     unique: true,
   },
+  posts : [
+      {type: mongoose.Schema.Types.ObjectId,ref:'Post'}
+  ]
+}, {
+
+  versionKey: false,
+  timestamps: true
+
 }).pre<IUserDocument>("save", async function(next) {
   if (!this.isModified("password")) return next();
   try {
@@ -58,7 +62,7 @@ schema.methods.comparePassword = async function comparePassword(data) {
 }
 
 
-export let UserModel = mongoose.model<IUserModel>(
+export let UserModel = model<IUserModel>(
   "user",
   schema,
   "users",
