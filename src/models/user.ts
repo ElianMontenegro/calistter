@@ -37,6 +37,7 @@ let schema = new Schema<IUserModel>({
     type: Number,
     minlength: 10,
     unique: true,
+    default: 0
   },
   posts : [
       {type: mongoose.Schema.Types.ObjectId,ref:'Post'}
@@ -58,7 +59,7 @@ let schema = new Schema<IUserModel>({
   }
 })
 schema.methods.comparePassword = async function comparePassword(data) {
-  return bcrypt.compare(data, this.password);
+  return await bcrypt.compare(data, this.password);
 }
 
 

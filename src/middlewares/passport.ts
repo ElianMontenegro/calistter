@@ -1,14 +1,13 @@
 import { config } from 'dotenv'
 import { Strategy, ExtractJwt, StrategyOptions } from 'passport-jwt'
-import  {UserModel,  IUserModel} from '../models/user';
+import { UserModel } from '../models/user';
 
 const optsJWT: StrategyOptions = {
     jwtFromRequest:  ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey:process.env.JWTSECRET || "7df3f6727b0e93c5eb6331755a1b3e9f"
+    secretOrKey:process.env.JWTSECRET || "7df3323232321111e9f",
 }
 
-
-export default new Strategy(optsJWT,async (payload, done) => {
+export const tokenStrategy = new Strategy(optsJWT,async (payload, done) => {
     try {
         const user = await UserModel.findById(payload.id);
         if (user) {
