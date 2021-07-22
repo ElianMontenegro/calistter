@@ -1,25 +1,26 @@
 import mongoose, { Schema, model } from "mongoose";
 
 export interface IPost {
-    commet: string;
-    imagePath: string;
-    user: string;
+  commet: string;
+  imagePath: string;
+  user: string;
 }
 
-const post = new Schema({
+const post = new Schema(
+  {
     commet: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     imagePath: {
-        type: String
+      type: String,
     },
-    user: { type:mongoose.Schema.Types.ObjectId,ref:'user' }
-},{
-
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+  },
+  {
     versionKey: false,
-    timestamps: true
-  
-});
+    timestamps: true,
+  }
+);
 
-export let PostModel = model<IPost>('Post', post);
+export let PostModel = model<IPost>("Post", post);

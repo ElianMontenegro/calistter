@@ -1,8 +1,7 @@
 import { Router } from "express";
 import { userController } from "../controllers/userController";
 const router: Router = Router();
-
-import passport from "passport";
+import { JWThelpers } from "../helpers/jwtHelpers";
 
 /**
  * @swagger
@@ -14,7 +13,7 @@ import passport from "passport";
  *       properties:
  *        token:
  *          type: string
- *          format: byte 
+ *          format: byte
  *          description: JWT
  *     User:
  *       type: object
@@ -66,7 +65,7 @@ import passport from "passport";
 /**
  * @swagger
  * /api/register:
- *  post: 
+ *  post:
  *    summary: here you can register
  *    Authorization: Bearer <token>
  *    securyty:
@@ -80,7 +79,7 @@ import passport from "passport";
  *          schema:
  *            type: object
  *            properties:
- *              username: 
+ *              username:
  *                type: string
  *              email:
  *                type: string
@@ -91,17 +90,17 @@ import passport from "passport";
  *    responses:
  *      '201':
  *        description: return the jwt created
- *        content:  
+ *        content:
  *             application/json:
  *                 schema:
  *                     $ref: '#/components/schemas/token'
  *                 example:
  *                     token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZGUwNTdhZmQzMjBiMmI5Yzk2ZGE5OSIsImVtYWlsIjoiZWxpYW5tb250ZW5lZ3JvNDkxQGdtYWlsLmNvbSIsImlhdCI6MTYyNjEyMTQzOCwiZXhwIjoxNjI2MjA3ODM4fQ.AgmSJFEbQYZPUAhqJkz03ii1LvQ6dF2P07fcqOX5MWI
- *      '400': 
+ *      '400':
  *        description: return some problem with fields
- *      '500': 
+ *      '500':
  *        description: return Internal Server Error
- *      
+ *
  */
 
 router.route("/api/register").post(userController.register);
@@ -131,7 +130,7 @@ router.route("/api/register").post(userController.register);
  *     responses:
  *      '200':
  *         description: return the jwt created
- *         content:  
+ *         content:
  *              application/json:
  *                  schema:
  *                      $ref: '#/components/schemas/token'
@@ -143,34 +142,55 @@ router.route("/api/register").post(userController.register);
  *         description: return user not found
  *      '500':
  *         description: server error
- *      
- *     
+ *
+ *
  */
 
 router.route("/api/login").post(userController.login);
 
+/**
+ * @swagger
+ *  /api/refreshToken:
+ *   post:
+ *    summary: here you can get other access token with the refresh token
+ *    security:
+ *       - bearerAuth: []
+ *    tags: [Aouth]
+ *    responses:
+ *      '200':
+ *         description: return the jwt access
+ *         content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/token'
+ *                  example:
+ *                      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZGUwNTdhZmQzMjBiMmI5Yzk2ZGE5OSIsImVtYWlsIjoiZWxpYW5tb250ZW5lZ3JvNDkxQGdtYWlsLmNvbSIsImlhdCI6MTYyNjEyMTQzOCwiZXhwIjoxNjI2MjA3ODM4fQ.AgmSJFEbQYZPUAhqJkz03ii1LvQ6dF2P07fcqOX5MWI
+ *      '401':
+ *        description: UnauthorizedError
+ */
 
-router.post('/api/refreshToken', userController.refreshToken);
 
-router.get(
-  "/home",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    res.send("success");
-  }
-);
 
-router.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["email", "profile"] })
-);
+router.post("/api/refreshToken", userController.refreshToken);
 
-router.get(
-  "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/auth/google/failure" }),
-  function (req, res) {
-    res.send("anda padre");
-  }
-);
+
+/**
+ * @swagger
+ *  /api/logout:
+ *   post:
+ *    summary: here you can logged and revoke the refresh token
+ *    security:
+ *       - bearerAuth: []
+ *    tags: [Aouth]
+ *    responses:
+ *      '204':
+ *         description: revoke token
+ *      '401':
+ *        description: UnauthorizedError
+ */
+
+router.post("/api/logout",  userController.logout)
+
+
 
 export default module.exports = router;

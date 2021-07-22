@@ -1,10 +1,8 @@
 import { Router } from "express";
-import multer  from '../libs/multer';
+import multer from "../libs/multer";
 import { postController } from "../controllers/postController";
-import passport from 'passport';
-
+import verifyAuthentication from '../middlewares/verifyAuthentication'
 const router = Router();
-
 
 /**
  * @swagger
@@ -21,18 +19,18 @@ const router = Router();
  *          description: in this field will be the text of post
  *        imagePath:
  *          type: string
- *          format: binary 
- *        user: 
+ *          format: binary
+ *        user:
  *          type: object
- *          description: here will be user craeted post
+ *          description: here will be user craeted post, the id user will be get from token
  *      requered:
- *        - commet 
+ *        - commet
  *      example:
  *        id: 60dfaae57b28491b1cf0b38b
  *        commet: this is a post
  *        image: uploads\bae32cfa-d29f-4525-bac4-078b2d145ffb.png
  *        user: 60de057afd320b2b9c96da99
- *  
+ *
  *  securitySchemes:
  *   cookieAuth:
  *     type: apikey
@@ -43,7 +41,7 @@ const router = Router();
  *     description: Access token is missing or invalid
  *   404:
  *     description: A post with the specified ID was not found.
- * 
+ *
  *  parameters:
  *      postId:
  *          in: path
@@ -52,11 +50,10 @@ const router = Router();
  *          schema:
  *              type: string
  *          description: the post id
- *     
- *      
- *              
- */ 
-
+ *
+ *
+ *
+ */
 
 /**
  * @swagger
@@ -64,7 +61,6 @@ const router = Router();
  *  name: Posts
  *  description: Posts endpoint
  */
-
 
 /**
  * @swagger
@@ -77,9 +73,9 @@ const router = Router();
  *    requestBody:
  *      required: true
  *      content:
- *        application/json:
+ *        multipart/form-data:
  *          schema:
- *            $ref: '#/components/schemas/Post'  
+ *            $ref: '#/components/schemas/Post'
  *    responses:
  *      201:
  *        description: the post succesfully created
@@ -93,11 +89,13 @@ const router = Router();
  *        $ref: '#/components/responses/UnauthorizedError'
  */
 
-
-router.route('/')
-    .post(passport.authenticate('jwt', {session: false}),multer.single('imagePath'), postController.create)
-    
-
+router
+  .route("/")
+  .post(
+    verifyAuthentication,
+    multer.single("imagePath"),
+    postController.create
+  );
 
 /**
  * @swagger
@@ -114,11 +112,15 @@ router.route('/')
  *              description: success delete , dont return any body
  *          '404':
  *              $ref: '#/components/responses/404'
- *         
+ *
  */
 
-
-router.route('/:id')
-    .delete(passport.authenticate('jwt', {session: false}), postController.delete)
+router
+  .route("/:id")
+  .delete(
+    verifyAuthentication,
+    postController.delete
+  );
+  
 
 export default module.exports = router;

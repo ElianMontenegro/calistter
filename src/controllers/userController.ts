@@ -1,32 +1,8 @@
 import { Request, Response } from "express";
-import { UserModel, IUserModel } from "../models/user";
+import { UserModel } from "../models/user";
 import jwt from "jsonwebtoken";
-import passport  from "passport";
+import { JWThelpers } from "../helpers/jwtHelpers";
 import "../config";
-
-function createToken(user: IUserModel) {
-  return jwt.sign(
-    { id: user._id, email: user.email },
-    process.env.JWTSECRET || "7df3323232321111e9f",
-    {
-      expiresIn: 15,
-      algorithm: "HS256",
-      issuer: process.env.URL,
-    }
-  );
-}
-
-function createrefreshToken(user: IUserModel) {
-  return jwt.sign(
-    { id: user._id, email: user.email },
-    process.env.REFRESHJWTSECRET || "7df32323232329f",
-    {
-      expiresIn: 22222,
-      algorithm: "HS256",
-      issuer: process.env.URL,
-    }
-  );
-}
 
 class UserController {
   public async register(req: Request, res: Response) {
@@ -43,8 +19,8 @@ class UserController {
     try {
       const user = await newUser.save();
       res.status(201).json({
-        token: createToken(user),
-        refreshToken: createrefreshToken(user),
+        token: JWThelpers.createToken(user),
+        refreshToken: JWThelpers.createrefreshToken(user),
       });
     } catch (error) {
       return res.status(500).json({
@@ -71,8 +47,8 @@ class UserController {
         });
       }
       return res.status(200).json({
-        token: createToken(user),
-        refreshToken: createrefreshToken(user),
+        token: JWThelpers.createToken(user),
+        refreshToken: JWThelpers.createrefreshToken(user),
       });
     } catch (error) {
       return res.status(500).json({
@@ -82,33 +58,38 @@ class UserController {
   }
 
   public async refreshToken(req: Request, res: Response) {
-    const refreshToken = req.headers['authorization']
-    const token = refreshToken && refreshToken.split(' ')[1]
-    if(!(token) || token == null) {
-        res.status(401).json({
-          msg: 'error'
-        })
-    }
-    const verifyToken : any = jwt.verify(token || "" ,process.env.REFRESHJWTSECRET || "", (err, user)  => {
-      if(err) return err;
-      return user;
-    });
-    const id = verifyToken.id;
-    console.log(id);
-    
+    const token: any = JWThelpers.verifyAccessToken(req, res);
+    let payload: any;
     try {
-      const user = await UserModel.findById(id)
-      if(!user){
-        return res.sendStatus(404)
-      }
-      return res.status(200).json({
-        token: createToken(user),
-      });
+      payload = jwt.verify(token, process.env.REFRESHJWTSECRET!);
     } catch (error) {
-      return res.sendStatus(500);
+      return res.status(500).json({
+        error,
+      });
     }
-    
+    const user: any = await UserModel.findOne({ _id: payload.id });
+    if (!user) {
+      return res.sendStatus(401);
+    }
 
+    if (user.tokenVersion !== payload.tokenVersion) {
+      return res.sendStatus(401);
+    }
+
+    return res.status(200).json({
+      token: JWThelpers.createToken(user),
+    });
+  }
+
+  public async logout(req: Request, res: Response) {
+    const token: any = JWThelpers.verifyAccessToken(req, res);
+    const payload: any = jwt.verify(token, process.env.REFRESHJWTSECRET!);
+    if (await JWThelpers.revokeRefreshTokenByUser(payload.id)) {
+      return res.sendStatus(204);
+    }
+    return res.status(401).json({
+      msg: "unauthorized",
+    });
   }
 }
 
